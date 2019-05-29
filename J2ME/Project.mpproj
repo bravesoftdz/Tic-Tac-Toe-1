@@ -1,0 +1,16 @@
+<Project>
+	<MIDlet Name="Project" Vendor="MIDletPascal3" Version="1.0.0" Icon="/icon.png"/>
+	<Sources>
+		<source filename="Project.mpsrc"/>
+	</Sources>
+	<Resources>
+		<resource filename="icon.png" configurations=":all:"/>
+		<resource filename="menuBckg.png" configurations=":all:"/>
+		<resource filename="menuOff.png" configurations=":all:"/>
+		<resource filename="menuOn.png" configurations=":all:"/>
+	</Resources>
+	<BuildConfigurations>
+		<configuration name="Default" type="nokia" version="2" math="1"/>
+		<ActiveConfiguration index="0"/>
+	</BuildConfigurations>
+</Project>
