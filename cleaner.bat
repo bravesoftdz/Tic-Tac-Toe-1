@@ -9,4 +9,6 @@ del /S /Q J2ME\Tic-Tac-Toe\classes
 
 del /S /Q J2ME\Tic-Tac-Toe\src\build
 
+del /S /Q Tic-Tac-Toe/bin
+
 exit
