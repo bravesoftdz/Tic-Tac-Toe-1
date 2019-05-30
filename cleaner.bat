@@ -1,9 +1,12 @@
 @echo off
 
-del /S /Q J2ME\bin
-del /S /Q J2ME\classes
-del /S /Q J2ME\history
-del /S /Q J2ME\libs
-del /S /Q J2ME\scripts
+del /S /Q J2ME\Tic-Tac-Toe\bin
+del /S /Q J2ME\Tic-Tac-Toe\classes
+
+:: del /S /Q J2ME\Tic-Tac-Toe\history
+:: del /S /Q J2ME\Tic-Tac-Toe\libs
+:: del /S /Q J2ME\Tic-Tac-Toe\scripts
+
+del /S /Q J2ME\Tic-Tac-Toe\src\build
 
 exit
