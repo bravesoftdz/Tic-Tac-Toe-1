@@ -1,7 +1,8 @@
 _local/
 
-J2ME/bin/
-J2ME/classes/
-J2ME/history/
-J2ME/libs/
-J2ME/scripts/
+# J2ME/Tic-Tac-Toe/bin/
+# J2ME/Tic-Tac-Toe/classes/
+
+# J2ME/Tic-Tac-Toe/history/
+# J2ME/Tic-Tac-Toe/libs/
+# J2ME/Tic-Tac-Toe/scripts/
