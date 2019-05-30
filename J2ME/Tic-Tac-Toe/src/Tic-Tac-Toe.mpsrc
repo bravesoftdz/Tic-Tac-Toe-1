@@ -366,14 +366,14 @@ begin
     cell_size := GetWidth / 3;
     
     // Координати всіх комірок.
-    cells[0, 0] := 0;                   cells[0, 1] := 0;
-    cells[1, 0] := cell_size;        cells[1, 1] := 0;
+    cells[0, 0] := 0;               cells[0, 1] := 0;
+    cells[1, 0] := cell_size;       cells[1, 1] := 0;
     cells[2, 0] := cell_size * 2;   cells[2, 1] := 0;
-    cells[3, 0] := 0;                   cells[3, 1] := cell_size;
-    cells[4, 0] := cell_size;        cells[4, 1] := cell_size;
+    cells[3, 0] := 0;               cells[3, 1] := cell_size;
+    cells[4, 0] := cell_size;       cells[4, 1] := cell_size;
     cells[5, 0] := cell_size * 2;   cells[5, 1] := cell_size;
-    cells[6, 0] := 0;                   cells[6, 1] := cell_size * 2;
-    cells[7, 0] := cell_size;        cells[7, 1] := cell_size * 2;
+    cells[6, 0] := 0;               cells[6, 1] := cell_size * 2;
+    cells[7, 0] := cell_size;       cells[7, 1] := cell_size * 2;
     cells[8, 0] := cell_size * 2;   cells[8, 1] := cell_size * 2;
     
     menu_bckg := LoadImage('/menuBckg.png');

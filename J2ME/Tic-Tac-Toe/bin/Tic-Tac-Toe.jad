@@ -1,8 +1,8 @@
 MIDlet-1: Tic-Tac-Toe, /icon.png, FW
-MIDlet-Jar-Size: 9298
+MIDlet-Jar-Size: 9307
 MIDlet-Jar-URL: Tic-Tac-Toe.jar
 MIDlet-Name: Tic-Tac-Toe
-MIDlet-Vendor: MIDletPascal
+MIDlet-Vendor: fastb1t
 MIDlet-Icon: /icon.png
 MIDlet-Version: 1.0.0
 MicroEdition-Configuration: CLDC-1.0

@@ -1,5 +1,5 @@
 <Project>
-	<MIDlet Name="Tic-Tac-Toe" Vendor="MIDletPascal" Version="1.0.0" Icon="/icon.png"/>
+	<MIDlet Name="Tic-Tac-Toe" Vendor="fastb1t" Version="1.0.0" Icon="/icon.png"/>
 	<Sources>
 		<source filename="Tic-Tac-Toe.mpsrc"/>
 	</Sources>
@@ -10,6 +10,6 @@
 		<resource filename="menuOn.png" configurations=":all:"/>
 	</Resources>
 	<BuildConfigurations>
-		<configuration name="Default" type="fullscreen" version="2"/>
+		<configuration name="Default" type="nokia" version="2"/>
 	<ActiveConfiguration index="0"/>	</BuildConfigurations>
 </Project>
