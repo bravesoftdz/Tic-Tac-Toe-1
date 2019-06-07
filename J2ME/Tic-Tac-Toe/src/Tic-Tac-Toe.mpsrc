@@ -1,8 +1,5 @@
 program TicTacToe;
 var
-    menu_bckg: image; // Фон меню.
-    menu_imageOn: image; // Картинка активного пункту меню.
-    menu_imageOff: image; // Картинка пасивного пункту меню.
     menu_strings: array[1..4] of string; // Текст пунктів меню.
     menu_item: integer; // На якому пункті меню зараз є фокус.
     location: integer; // Від значення залежить, що буде виконуватися в програмі.
@@ -13,6 +10,7 @@ var
     board: array[0..8] of integer; // Значення всіх комірок.
     cells: array[0..8, 0..1] of integer; // Координати всіх комірок. cells[0, 0] - x, cells[0, 1] - y.
     cell_size: integer; // Розмір комірки.
+    
     cursor_pos: integer; // На якій комірці курсор.
     queue: integer; // Чий хід.
     counter: integer; // Кількість ходів.
@@ -21,9 +19,10 @@ var
     level: integer; // Рівень ігри.
     
 const
+    IDEMPTY = 0;
     IDX = 1;
     ID0 = 2;
-    IDEMPTY = 0;
+    caption = 'Tic-Tac-Toe';
 
 
 procedure DrawFigure(figure, x, y: integer);
@@ -123,30 +122,30 @@ var
 begin
     b_ret := False;
     
-    cmap[0, 0] := 0;    cmap[0, 1] := 1;    cmap[0, 2] := 2;
-    cmap[1, 0] := 0;    cmap[1, 1] := 2;    cmap[1, 2] := 1;
-    cmap[2, 0] := 1;    cmap[2, 1] := 2;    cmap[2, 2] := 0;
-    cmap[3, 0] := 3;    cmap[3, 1] := 4;    cmap[3, 2] := 5;
-    cmap[4, 0] := 3;    cmap[4, 1] := 5;    cmap[4, 2] := 4;
-    cmap[5, 0] := 4;    cmap[5, 1] := 5;    cmap[5, 2] := 3;
-    cmap[6, 0] := 6;    cmap[6, 1] := 7;    cmap[6, 2] := 8;
-    cmap[7, 0] := 6;    cmap[7, 1] := 8;    cmap[7, 2] := 7;
-    cmap[8, 0] := 7;    cmap[8, 1] := 8;    cmap[8, 2] := 6;
-    cmap[9, 0] := 0;    cmap[9, 1] := 3;    cmap[9, 2] := 6;
-    cmap[10, 0] := 0;  cmap[10, 1] := 6;   cmap[10, 2] := 3;
-    cmap[11, 0] := 3;  cmap[11, 1] := 6;   cmap[11, 2] := 0;
-    cmap[12, 0] := 1;  cmap[12, 1] := 4;   cmap[12, 2] := 7;
-    cmap[13, 0] := 1;  cmap[13, 1] := 7;   cmap[13, 2] := 4;
-    cmap[14, 0] := 4;  cmap[14, 1] := 7;   cmap[14, 2] := 1;
-    cmap[15, 0] := 2;  cmap[15, 1] := 5;   cmap[15, 2] := 8;
-    cmap[16, 0] := 2;  cmap[16, 1] := 8;   cmap[16, 2] := 5;
-    cmap[17, 0] := 5;  cmap[17, 1] := 8;   cmap[17, 2] := 2;
-    cmap[18, 0] := 0;  cmap[18, 1] := 4;   cmap[18, 2] := 8;
-    cmap[19, 0] := 0;  cmap[19, 1] := 8;   cmap[19, 2] := 4;
-    cmap[20, 0] := 4;  cmap[20, 1] := 8;   cmap[20, 2] := 0;
-    cmap[21, 0] := 2;  cmap[21, 1] := 4;   cmap[21, 2] := 6;
-    cmap[22, 0] := 2;  cmap[22, 1] := 6;   cmap[22, 2] := 4;
-    cmap[23, 0] := 4;  cmap[23, 1] := 6;   cmap[23, 2] := 2;
+    cmap[0,  0] := 0;  cmap[0,  1] := 1;  cmap[0,  2] := 2;
+    cmap[1,  0] := 0;  cmap[1,  1] := 2;  cmap[1,  2] := 1;
+    cmap[2,  0] := 1;  cmap[2,  1] := 2;  cmap[2,  2] := 0;
+    cmap[3,  0] := 3;  cmap[3,  1] := 4;  cmap[3,  2] := 5;
+    cmap[4,  0] := 3;  cmap[4,  1] := 5;  cmap[4,  2] := 4;
+    cmap[5,  0] := 4;  cmap[5,  1] := 5;  cmap[5,  2] := 3;
+    cmap[6,  0] := 6;  cmap[6,  1] := 7;  cmap[6,  2] := 8;
+    cmap[7,  0] := 6;  cmap[7,  1] := 8;  cmap[7,  2] := 7;
+    cmap[8,  0] := 7;  cmap[8,  1] := 8;  cmap[8,  2] := 6;
+    cmap[9,  0] := 0;  cmap[9,  1] := 3;  cmap[9,  2] := 6;
+    cmap[10, 0] := 0;  cmap[10, 1] := 6;  cmap[10, 2] := 3;
+    cmap[11, 0] := 3;  cmap[11, 1] := 6;  cmap[11, 2] := 0;
+    cmap[12, 0] := 1;  cmap[12, 1] := 4;  cmap[12, 2] := 7;
+    cmap[13, 0] := 1;  cmap[13, 1] := 7;  cmap[13, 2] := 4;
+    cmap[14, 0] := 4;  cmap[14, 1] := 7;  cmap[14, 2] := 1;
+    cmap[15, 0] := 2;  cmap[15, 1] := 5;  cmap[15, 2] := 8;
+    cmap[16, 0] := 2;  cmap[16, 1] := 8;  cmap[16, 2] := 5;
+    cmap[17, 0] := 5;  cmap[17, 1] := 8;  cmap[17, 2] := 2;
+    cmap[18, 0] := 0;  cmap[18, 1] := 4;  cmap[18, 2] := 8;
+    cmap[19, 0] := 0;  cmap[19, 1] := 8;  cmap[19, 2] := 4;
+    cmap[20, 0] := 4;  cmap[20, 1] := 8;  cmap[20, 2] := 0;
+    cmap[21, 0] := 2;  cmap[21, 1] := 4;  cmap[21, 2] := 6;
+    cmap[22, 0] := 2;  cmap[22, 1] := 6;  cmap[22, 2] := 4;
+    cmap[23, 0] := 4;  cmap[23, 1] := 6;  cmap[23, 2] := 2;
     
     queue := IDX;
     
@@ -302,9 +301,6 @@ end;
 procedure ShowMenu;
 var
     key: integer;
-
-const
-    caption = 'Tic-Tac-Toe';
     
 begin
     key := KeyToAction(gkey);
@@ -313,23 +309,20 @@ begin
     if (menu_item > 4) then menu_item := 4;
     
     SetColor(230, 30, 30);
-    DrawText(caption, GetWidth / 2 - GetStringWidth(caption) / 2, 25 - GetStringHeight(caption) / 2);
-    
-    DrawImage(menu_bckg, GetWidth / 2 - GetImageWidth(menu_bckg) / 2, 50);
+    DrawText(caption, GetWidth / 2 - GetStringWidth(caption) / 2, 10);
     
     for i := 1 to 4 do
     begin
         if (menu_item = i) then
-        begin
-            DrawImage(menu_imageOn, GetWidth / 2 - GetImageWidth(menu_imageOn) / 2, 20 + i * 50);
             SetColor(255, 255, 255);
-        end
         else
-        begin
-            DrawImage(menu_imageOff, GetWidth / 2 - GetImageWidth(menu_imageOff) / 2, 20 + i * 50);
             SetColor(150, 150, 150);
-        end;
-        DrawText(menu_strings[i], GetWidth / 2 - GetStringWidth(menu_strings[i]) / 2, (20 + i * 50) + GetImageHeight(menu_imageOn) / 2 - GetStringHeight(menu_strings[i]) / 2);
+        
+        DrawText(
+            menu_strings[i],
+            GetWidth / 2 - GetStringWidth(menu_strings[i]) / 2,
+            10 + GetStringHeight(caption) + 10 + (i - 1) * GetStringHeight(menu_strings[i])
+        );
     end;
     
     if (key = GA_UP) then menu_item := menu_item - 1;
@@ -342,9 +335,13 @@ begin
 end;
 
 
-procedure ZeroVS;
+procedure ClearValues;
 begin
-    // Онуляєм всі значення комірок.
+    menu_item := 0;
+    location := 0;
+    
+    gkey := KE_NONE;
+    
     for i := 0 to 8 do
         board[i] := IDEMPTY;
     
@@ -354,10 +351,6 @@ begin
     counterX := 0;
     counter0 := 0;
     level := 0;
-    
-    location := 0;
-    menu_item := 0;
-    gkey := KE_NONE;
 end;
 
 
@@ -376,16 +369,12 @@ begin
     cells[7, 0] := cell_size;       cells[7, 1] := cell_size * 2;
     cells[8, 0] := cell_size * 2;   cells[8, 1] := cell_size * 2;
     
-    menu_bckg := LoadImage('/menuBckg.png');
-    menu_imageOn := LoadImage('/menuOn.png');
-    menu_imageOff := LoadImage('/menuOff.png');
-    
     menu_strings[1] := 'Легкий рівень';
     menu_strings[2] := 'Складний рівень';
     menu_strings[3] := 'Гра на двох';
     menu_strings[4] := 'Вихід';
     
-    ZeroVS;
+    ClearValues;
     
     repeat
         SetColor(50, 50, 50);
@@ -393,17 +382,12 @@ begin
         
         gkey := GetKeyClicked;
         
-        if (gkey = -6) or (gkey = -7) then ZeroVS;
+        if (gkey = -6) or (gkey = -7) then ClearValues;
         
         if (location = 0) then ShowMenu;
-        if (location = 1) then
+        if (location = 1) or (location = 2) then
         begin
-            level := 1;
-            PlayGame;
-        end;
-        if (location = 2) then 
-        begin
-            level := 2;
+            level := location;
             PlayGame;
         end;
         if (location = 3) then

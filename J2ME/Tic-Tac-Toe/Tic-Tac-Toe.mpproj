@@ -5,9 +5,6 @@
 	</Sources>
 	<Resources>
 		<resource filename="icon.png" configurations=":all:"/>
-		<resource filename="menuBckg.png" configurations=":all:"/>
-		<resource filename="menuOff.png" configurations=":all:"/>
-		<resource filename="menuOn.png" configurations=":all:"/>
 	</Resources>
 	<BuildConfigurations>
 		<configuration name="Default" type="nokia" version="2"/>
