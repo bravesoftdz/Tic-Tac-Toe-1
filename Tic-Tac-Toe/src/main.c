@@ -3,25 +3,31 @@
 #include <string.h>
 
 static void clear_screen();
-static void init(int);
+static int init(int);
 static void game();
 static void menu();
 
-enum { ID_X, ID_0 };
+enum {
+    ID_X,
+    ID_0
+};
 
 static char board[9];
-static int queue = ID_X;
-static int counter = 0;
+static unsigned int queue;
+static unsigned int counter;
 
 static void clear_screen()
 {
-    int n;
-    for (n = 0; n < 30; n++)
-        printf("\n");
+    unsigned int i;
+    for (i = 0; i < 50; i++)
+        fprintf(stdout, "\n");
 }
 
-static void init(int k)
+static int init(int k)
 {
+    if (k < 0 || k > 8)
+        return 0;
+
     if (board[k] == '-')
     {
         if (queue == ID_X)
@@ -36,27 +42,27 @@ static void init(int k)
         }
         counter++;
     }
+    return 1;
 }
 
 static void game()
 {
     clear_screen();
-    printf(
+    fprintf(stdout,
         "Menu:\n\n"
         " -1-|-2-|-3-\n"
         " -4-|-5-|-6-\n"
         " -7-|-8-|-9-\n\n\n");
-    printf("Board:\n\n");
-    printf(" -%c-|-%c-|-%c-\n", board[0], board[1], board[2]);
-    printf(" -%c-|-%c-|-%c-\n", board[3], board[4], board[5]);
-    printf(" -%c-|-%c-|-%c-\n", board[6], board[7], board[8]);
+    fprintf(stdout, "Board:\n\n");
+    fprintf(stdout, " -%c-|-%c-|-%c-\n", board[0], board[1], board[2]);
+    fprintf(stdout, " -%c-|-%c-|-%c-\n", board[3], board[4], board[5]);
+    fprintf(stdout, " -%c-|-%c-|-%c-\n", board[6], board[7], board[8]);
 
-    int end_game = 0;
+    unsigned int end_game = 0;
     if (counter == 9)
         end_game = 3;
     else
     {
-        // X
         if (board[0] == 'X' && board[1] == 'X' && board[2] == 'X') end_game = 1;
         if (board[3] == 'X' && board[4] == 'X' && board[5] == 'X') end_game = 1;
         if (board[6] == 'X' && board[7] == 'X' && board[8] == 'X') end_game = 1;
@@ -66,7 +72,6 @@ static void game()
         if (board[0] == 'X' && board[4] == 'X' && board[8] == 'X') end_game = 1;
         if (board[2] == 'X' && board[4] == 'X' && board[6] == 'X') end_game = 1;
 
-        // 0
         if (board[0] == '0' && board[1] == '0' && board[2] == '0') end_game = 2;
         if (board[3] == '0' && board[4] == '0' && board[5] == '0') end_game = 2;
         if (board[6] == '0' && board[7] == '0' && board[8] == '0') end_game = 2;
@@ -76,29 +81,34 @@ static void game()
         if (board[0] == '0' && board[4] == '0' && board[8] == '0') end_game = 2;
         if (board[2] == '0' && board[4] == '0' && board[6] == '0') end_game = 2;
     }
+
     switch (end_game)
     {
     case 1:
-        printf("\n!!! X peremih !!!\n");
+        fprintf(stdout, "\n!!! X wined !!!\n");
         break;
     case 2:
-        printf("\n!!! 0 peremih !!!\n");
+        fprintf(stdout, "\n!!! 0 wined !!!\n");
         break;
     case 3:
-        printf("\n!!! nichya !!!\n");
+        fprintf(stdout, "\n;; Draw, keep trying ;;\n");
         break;
     }
+
     if (end_game)
     {
         getchar();
         menu();
     }
 
-    printf("\nEnter the number: ");
-    char str[2];
-    gets(str);
+    fprintf(stdout, "\nEnter the number: ");
 
-    init(atoi(str) - 1);
+    char c = 0;
+    while (!isdigit(c))
+        fscanf(stdin, "%c", &c);
+    fflush(stdin);
+
+    init(c - '0' - 1);
     game();
 }
 
@@ -109,15 +119,18 @@ static void menu()
     memset(board, '-', 9);
     clear_screen();
 
-    printf(
+    fprintf(stdout,
         "Game Menu:\n\n"
         " 1 - New Game\n"
         " 2 - Exit\n\n"
         "Enter the number: ");
 
-    char str[16];
-    gets(str);
-    switch (str[0])
+    char c = 0;
+    while (!isdigit(c))
+        fscanf(stdin, "%c", &c);
+    fflush(stdin);
+
+    switch (c)
     {
     case '1':
         game();
@@ -132,7 +145,7 @@ static void menu()
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     menu();
     return 0;
