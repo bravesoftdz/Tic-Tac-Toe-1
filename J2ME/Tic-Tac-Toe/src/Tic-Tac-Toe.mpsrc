@@ -2,12 +2,15 @@ program TicTacToe;
 var
     menu_strings: array[1..4] of string; // Текст пунктів меню.
     menu_item: integer; // На якому пункті меню зараз є фокус.
+    
     location: integer; // Від значення залежить, що буде виконуватися в програмі.
     
-    gkey: integer; // Код останньої нажатої клавіші.
-    i, j, x, y, w, h: integer; // Допоміжні змінні.
+    last_key_pressed: integer; // Код останньої нажатої клавіші.
     
     board: array[0..8] of integer; // Значення всіх комірок.
+    board_x: integer; // Початок дошки на абсцисі.
+    board_y: integer; // Початок дошки на ординаті.
+    board_size: integer; // Розмір дошки.
     cells: array[0..8, 0..1] of integer; // Координати всіх комірок. cells[0, 0] - x, cells[0, 1] - y.
     cell_size: integer; // Розмір комірки.
     
@@ -44,11 +47,33 @@ procedure DrawBoard;
 begin
     SetColor(30, 30, 230);
     
-    DrawLine(cell_size, 0, cell_size, cell_size * 3);
-    DrawLine(cell_size * 2, 0, cell_size * 2, cell_size * 3);
+    DrawLine(
+        board_x + cell_size,
+        board_y,
+        board_x + cell_size,
+        board_y + cell_size * 3
+    );
     
-    DrawLine(0, cell_size, cell_size * 3, cell_size);
-    DrawLine(0, cell_size * 2, cell_size * 3, cell_size * 2);
+    DrawLine(
+        board_x + cell_size * 2,
+        board_y,
+        board_x + cell_size * 2,
+        board_y + cell_size * 3
+    );
+    
+    DrawLine(
+        board_x,
+        board_y + cell_size,
+        board_x + cell_size * 3,
+        board_y + cell_size
+    );
+    
+    DrawLine(
+        board_x,
+        board_y + cell_size * 2,
+        board_x + cell_size * 3,
+        board_y + cell_size * 2
+    );
     
     DrawFigure(board[0], cells[0, 0], cells[0, 1]);
     DrawFigure(board[1], cells[1, 0], cells[1, 1]);
@@ -64,22 +89,22 @@ end;
 
 function IsWin: integer;
 var
-    b_ret: boolean;
+    bfound: boolean;
     
 begin
     IsWin := IDEMPTY;
-    b_ret := False;
+    bfound := False;
     
-    if (board[0] = IDX) and (board[1] = IDX) and (board[2] = IDX) then begin IsWin := IDX; b_ret := True; end;
-    if (board[3] = IDX) and (board[4] = IDX) and (board[5] = IDX) then begin IsWin := IDX; b_ret := True; end;
-    if (board[6] = IDX) and (board[7] = IDX) and (board[8] = IDX) then begin IsWin := IDX; b_ret := True; end;
-    if (board[0] = IDX) and (board[3] = IDX) and (board[6] = IDX) then begin IsWin := IDX; b_ret := True; end;
-    if (board[1] = IDX) and (board[4] = IDX) and (board[7] = IDX) then begin IsWin := IDX; b_ret := True; end;
-    if (board[2] = IDX) and (board[5] = IDX) and (board[8] = IDX) then begin IsWin := IDX; b_ret := True; end;
-    if (board[0] = IDX) and (board[4] = IDX) and (board[8] = IDX) then begin IsWin := IDX; b_ret := True; end;
-    if (board[2] = IDX) and (board[4] = IDX) and (board[6] = IDX) then begin IsWin := IDX; b_ret := True; end;
+    if (board[0] = IDX) and (board[1] = IDX) and (board[2] = IDX) then begin IsWin := IDX; bfound := True; end;
+    if (board[3] = IDX) and (board[4] = IDX) and (board[5] = IDX) then begin IsWin := IDX; bfound := True; end;
+    if (board[6] = IDX) and (board[7] = IDX) and (board[8] = IDX) then begin IsWin := IDX; bfound := True; end;
+    if (board[0] = IDX) and (board[3] = IDX) and (board[6] = IDX) then begin IsWin := IDX; bfound := True; end;
+    if (board[1] = IDX) and (board[4] = IDX) and (board[7] = IDX) then begin IsWin := IDX; bfound := True; end;
+    if (board[2] = IDX) and (board[5] = IDX) and (board[8] = IDX) then begin IsWin := IDX; bfound := True; end;
+    if (board[0] = IDX) and (board[4] = IDX) and (board[8] = IDX) then begin IsWin := IDX; bfound := True; end;
+    if (board[2] = IDX) and (board[4] = IDX) and (board[6] = IDX) then begin IsWin := IDX; bfound := True; end;
     
-    if (b_ret = False) then
+    if (bfound = False) then
     begin
         if (board[0] = ID0) and (board[1] = ID0) and (board[2] = ID0) then IsWin := ID0;
         if (board[3] = ID0) and (board[4] = ID0) and (board[5] = ID0) then IsWin := ID0;
@@ -116,11 +141,12 @@ end;
 
 procedure GameLevel2;
 var
+    i: integer;
+    bfound: boolean;
     cmap: array[0..24, 0..3] of integer;
-    b_ret: boolean;
     
 begin
-    b_ret := False;
+    bfound := False;
     
     cmap[0,  0] := 0;  cmap[0,  1] := 1;  cmap[0,  2] := 2;
     cmap[1,  0] := 0;  cmap[1,  1] := 2;  cmap[1,  2] := 1;
@@ -149,43 +175,41 @@ begin
     
     queue := IDX;
     
-    // Доставляєм виграшну комбінацію.
     for i := 0 to 23 do
     begin
-        if (board[cmap[i, 0]] = ID0) and (board[cmap[i, 1]] = ID0) and (board[cmap[i, 2]] = IDEMPTY) and (b_ret = False) then
+        if (board[cmap[i, 0]] = ID0) and (board[cmap[i, 1]] = ID0) and (board[cmap[i, 2]] = IDEMPTY) and (bfound = False) then
         begin
             counter := counter + 1;
             board[cmap[i, 2]] := ID0;
-            b_ret := True;
+            bfound := True;
         end;
     end;
     
-    // Якшо виграшної комбінації для '0' немає, а для 'X' є, то мішаєм виграти супротивнику.
     for i := 0 to 23 do
     begin
-        if (board[cmap[i, 0]] = IDX) and (board[cmap[i, 1]] = IDX) and (board[cmap[i, 2]] = IDEMPTY) and (b_ret = False) then
+        if (board[cmap[i, 0]] = IDX) and (board[cmap[i, 1]] = IDX) and (board[cmap[i, 2]] = IDEMPTY) and (bfound = False) then
         begin
             counter := counter + 1;
             board[cmap[i, 2]] := ID0;
-            b_ret := True;
+            bfound := True;
         end;
     end;
     
-    // Якщо немає ніякої виграшної комбінації, то знаходимо рандомне 0.
-    if (b_ret = False) then
+    if (bfound = False) then
         GameLevel1;
 end;
 
 
 procedure PlayGame;
 var
+    i, x, y, w, h: integer;
     key: integer;
     win: integer;
     win_msg: array[0..3] of string;
     tmp_msg: string;
     
 begin
-    key := keyToAction(gkey);
+    key := KeyToAction(last_key_pressed);
     win := IsWin;
     
     win_msg[IDX] := 'Виграв X';
@@ -198,44 +222,63 @@ begin
     DrawRect(GetWidth / 2 - 50, GetHeight - 45, 100, 40);
     DrawRect(GetWidth / 2 - 50, GetHeight - 45, 40, 40);
     
-    if (queue = IDX) then DrawText('X', GetWidth / 2 - 30 - GetStringWidth('X') / 2, GetHeight - 25 - GetStringHeight('X') / 2);
-    if (queue = ID0) then DrawText('0', GetWidth / 2 - 30 - GetStringWidth('X') / 2, GetHeight - 25 - GetStringHeight('0') / 2);
+    if (queue = IDX)
+        then tmp_msg := 'X';
+    
+    if (queue = ID0)
+        then tmp_msg := '0';
+    
+    DrawText(tmp_msg, GetWidth / 2 - 30 - GetStringWidth(tmp_msg) / 2, GetHeight - 25 - GetStringHeight(tmp_msg) / 2);
     
     tmp_msg := 'X: ' + IntegerToString(counterX);
     DrawText(tmp_msg, GetWidth / 2, GetHeight - 35 - GetStringHeight(tmp_msg) / 2);
+    
     tmp_msg := '0: ' + IntegerToString(counter0);
     DrawText(tmp_msg, GetWidth / 2, GetHeight - 15 - GetStringHeight(tmp_msg) / 2);
     
     if (win = IDX) or (win = ID0) or ((win = IDEMPTY) and (counter = 9)) then
     begin
         x := GetWidth / 2 - GetStringWidth(win_msg[win]) / 2 - 10;
-        y := GetWidth / 2 - GetStringHeight(win_msg[win]) / 2 - 5;
+        y := 5 + board_size / 2 - GetStringHeight(win_msg[win]) / 2 - 5;
         w := GetStringWidth(win_msg[win]) + 20;
         h := GetStringHeight(win_msg[win]) + 10;
         
         SetColor(50, 50, 50);
         FillRect(x, y, w, h);
+        
         SetColor(255, 255, 255);
         DrawRect(x, y, w, h);
         
-        DrawText(win_msg[win], GetWidth / 2 - GetStringWidth(win_msg[win]) / 2, GetWidth / 2 - GetStringHeight(win_msg[win]) / 2);
+        DrawText(
+            win_msg[win],
+            GetWidth / 2 - GetStringWidth(win_msg[win]) / 2,
+            5 + board_size / 2 - GetStringHeight(win_msg[win]) / 2
+        );
         
         if (key = GA_FIRE) then
         begin
-            counter := 0;
-            queue := IDX;
+            key := GA_NONE;
+            last_key_pressed := KE_NONE;
+            
             for i := 0 to 8 do
                 board[i] := IDEMPTY;
-            key := GA_NONE;
-            gkey := KE_NONE;
+            
             cursor_pos := 0;
+            queue := IDX;
+            counter := 0;
         end;
     end;
     
     if (win = IDEMPTY) and (counter < 9) then
     begin
         SetColor(255, 0, 0);
-        DrawRect(cells[cursor_pos, 0] + 2, cells[cursor_pos, 1] + 2, cell_size - 4, cell_size - 4);
+        
+        DrawRect(
+            cells[cursor_pos, 0] + 2,
+            cells[cursor_pos, 1] + 2,
+            cell_size - 4,
+            cell_size - 4
+        );
         
         if (key = GA_UP) then
         begin
@@ -259,8 +302,11 @@ begin
         if (key = GA_RIGHT) then
             cursor_pos := cursor_pos + 1;
         
-        if (cursor_pos < 0) then cursor_pos := 0;
-        if (cursor_pos >= 9) then cursor_pos := 8;
+        if (cursor_pos < 0) then
+            cursor_pos := 0;
+        
+        if (cursor_pos >= 9) then
+            cursor_pos := 8;
         
         if (key = GA_FIRE) then
         begin
@@ -283,15 +329,20 @@ begin
                 
                 if (counter < 9) and (win = IDEMPTY) then
                 begin
-                    if (level = 1) then GameLevel1;
-                    if (level = 2) then GameLevel2;
+                    if (level = 1) then
+                        GameLevel1;
+                    
+                    if (level = 2) then
+                        GameLevel2;
                 end;
                 
                 win := IsWin;
                 
-                if (win = IDX) then counterX := counterX + 1;
-                if (win = ID0) then counter0 := counter0 + 1;
+                if (win = IDX) then
+                    counterX := counterX + 1;
                 
+                if (win = ID0) then
+                    counter0 := counter0 + 1;
             end;
         end;
     end;
@@ -300,19 +351,48 @@ end;
 
 procedure ShowMenu;
 var
+    i: integer;
     key: integer;
     
 begin
-    key := KeyToAction(gkey);
+    key := KeyToAction(last_key_pressed);
     
-    if (menu_item = 0) then menu_item := 1;
-    if (menu_item > 4) then menu_item := 4;
+    if (menu_item = 0) then
+        menu_item := 1;
+    
+    if (menu_item > 4) then
+        menu_item := 4;
     
     SetColor(230, 30, 30);
     DrawText(caption, GetWidth / 2 - GetStringWidth(caption) / 2, 10);
     
     for i := 1 to 4 do
     begin
+        if (menu_item = i) then
+            SetColor(5, 50, 100);
+        else
+            SetColor(50, 50, 50);
+        
+        FillRoundRect(
+            GetWidth / 2 - GetStringWidth(menu_strings[i]) / 2 - 8,
+            10 + GetStringHeight(caption) + 10 + (i - 1) * (GetStringHeight(menu_strings[i]) + 7) - 2,
+            GetStringWidth(menu_strings[i]) + 16,
+            GetStringHeight(menu_strings[i]) + 4,
+            10,
+            10
+        );
+        
+        SetColor(230, 50, 50);
+        
+        DrawRoundRect(
+            GetWidth / 2 - GetStringWidth(menu_strings[i]) / 2 - 8,
+            10 + GetStringHeight(caption) + 10 + (i - 1) * (GetStringHeight(menu_strings[i]) + 7) - 2,
+            GetStringWidth(menu_strings[i]) + 16,
+            GetStringHeight(menu_strings[i]) + 4,
+            10,
+            10
+        );
+        
         if (menu_item = i) then
             SetColor(255, 255, 255);
         else
@@ -321,26 +401,33 @@ begin
         DrawText(
             menu_strings[i],
             GetWidth / 2 - GetStringWidth(menu_strings[i]) / 2,
-            10 + GetStringHeight(caption) + 10 + (i - 1) * GetStringHeight(menu_strings[i])
+            10 + GetStringHeight(caption) + 10 + (i - 1) * (GetStringHeight(menu_strings[i]) + 7)
         );
     end;
     
-    if (key = GA_UP) then menu_item := menu_item - 1;
-    if (key = GA_DOWN) then menu_item := menu_item + 1;
+    if (key = GA_UP) then
+        menu_item := menu_item - 1;
+    
+    if (key = GA_DOWN) then
+        menu_item := menu_item + 1;
+    
     if (key = GA_FIRE) then
     begin
         location := menu_item;
-        gkey := KE_NONE;
+        last_key_pressed := KE_NONE;
     end;
 end;
 
 
 procedure ClearValues;
+var
+    i: integer;
+    
 begin
     menu_item := 0;
     location := 0;
     
-    gkey := KE_NONE;
+    last_key_pressed := KE_NONE;
     
     for i := 0 to 8 do
         board[i] := IDEMPTY;
@@ -355,19 +442,29 @@ end;
 
 
 begin
-    // Розмір комірок.
-    cell_size := GetWidth / 3;
+    board_size := GetHeight - 55;
     
-    // Координати всіх комірок.
-    cells[0, 0] := 0;               cells[0, 1] := 0;
-    cells[1, 0] := cell_size;       cells[1, 1] := 0;
-    cells[2, 0] := cell_size * 2;   cells[2, 1] := 0;
-    cells[3, 0] := 0;               cells[3, 1] := cell_size;
-    cells[4, 0] := cell_size;       cells[4, 1] := cell_size;
-    cells[5, 0] := cell_size * 2;   cells[5, 1] := cell_size;
-    cells[6, 0] := 0;               cells[6, 1] := cell_size * 2;
-    cells[7, 0] := cell_size;       cells[7, 1] := cell_size * 2;
-    cells[8, 0] := cell_size * 2;   cells[8, 1] := cell_size * 2;
+    repeat
+        if (board_size > GetWidth - 10) then
+            board_size := board_size - 1;
+        else
+            break;
+    until False;
+    
+    board_x := (GetWidth - board_size) / 2;
+    board_y := 5;
+    
+    cell_size := board_size / 3;
+    
+    cells[0, 0] := board_x;                   cells[0, 1] := board_y;
+    cells[1, 0] := board_x + cell_size;       cells[1, 1] := board_y;
+    cells[2, 0] := board_x + cell_size * 2;   cells[2, 1] := board_y;
+    cells[3, 0] := board_x;                   cells[3, 1] := board_y + cell_size;
+    cells[4, 0] := board_x + cell_size;       cells[4, 1] := board_y + cell_size;
+    cells[5, 0] := board_x + cell_size * 2;   cells[5, 1] := board_y + cell_size;
+    cells[6, 0] := board_x;                   cells[6, 1] := board_y + cell_size * 2;
+    cells[7, 0] := board_x + cell_size;       cells[7, 1] := board_y + cell_size * 2;
+    cells[8, 0] := board_x + cell_size * 2;   cells[8, 1] := board_y + cell_size * 2;
     
     menu_strings[1] := 'Легкий рівень';
     menu_strings[2] := 'Складний рівень';
@@ -380,22 +477,22 @@ begin
         SetColor(50, 50, 50);
         FillRect(0, 0, GetWidth, GetHeight);
         
-        gkey := GetKeyClicked;
+        last_key_pressed := GetKeyClicked;
         
-        if (gkey = -6) or (gkey = -7) then ClearValues;
+        if (last_key_pressed = -6) or (last_key_pressed = -7) then
+            ClearValues;
         
-        if (location = 0) then ShowMenu;
-        if (location = 1) or (location = 2) then
+        if (location = 0) then
+            ShowMenu;
+        
+        if (location = 1) or (location = 2) or (location = 3) then
         begin
             level := location;
             PlayGame;
         end;
-        if (location = 3) then
-        begin
-            level := 0;
-            PlayGame;
-        end;
-        if (location = 4) then Halt;
+        
+        if (location = 4) then
+            Halt;
         
         Repaint;
         Delay(1);
