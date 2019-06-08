@@ -1,25 +1,25 @@
 program TicTacToe;
 var
-    menu_strings: array[1..4] of string; // Текст пунктів меню.
-    menu_item: integer; // На якому пункті меню зараз є фокус.
+    menu_strings: array[1..4] of string;
+    menu_item: integer;
     
-    location: integer; // Від значення залежить, що буде виконуватися в програмі.
+    location: integer; 
     
-    last_key_pressed: integer; // Код останньої нажатої клавіші.
+    last_key_pressed: integer;
     
-    board: array[0..8] of integer; // Значення всіх комірок.
-    board_x: integer; // Початок дошки на абсцисі.
-    board_y: integer; // Початок дошки на ординаті.
-    board_size: integer; // Розмір дошки.
-    cells: array[0..8, 0..1] of integer; // Координати всіх комірок. cells[0, 0] - x, cells[0, 1] - y.
-    cell_size: integer; // Розмір комірки.
+    board: array[0..8] of integer;
+    board_x: integer;
+    board_y: integer;
+    board_size: integer;
+    cells: array[0..8, 0..1] of integer; // cells[0, 0] - x, cells[0, 1] - y.
+    cell_size: integer;
     
-    cursor_pos: integer; // На якій комірці курсор.
-    queue: integer; // Чий хід.
-    counter: integer; // Кількість ходів.
-    counterX: integer; // Кількість виграшів для 'X'.
-    counter0: integer; // Кількість виграшів для '0'.
-    level: integer; // Рівень ігри.
+    cursor_pos: integer;
+    queue: integer;
+    counter: integer;
+    counterX: integer;
+    counter0: integer;
+    level: integer;
     
 const
     IDEMPTY = 0;
@@ -212,9 +212,9 @@ begin
     key := KeyToAction(last_key_pressed);
     win := IsWin;
     
-    win_msg[IDX] := 'Виграв X';
-    win_msg[ID0] := 'Виграв 0';
-    win_msg[IDEMPTY] := 'Нічия';
+    win_msg[IDX] := 'Выиграл X';
+    win_msg[ID0] := 'Выиграл 0';
+    win_msg[IDEMPTY] := 'Ничья';
     
     DrawBoard;
     
@@ -466,10 +466,10 @@ begin
     cells[7, 0] := board_x + cell_size;       cells[7, 1] := board_y + cell_size * 2;
     cells[8, 0] := board_x + cell_size * 2;   cells[8, 1] := board_y + cell_size * 2;
     
-    menu_strings[1] := 'Легкий рівень';
-    menu_strings[2] := 'Складний рівень';
-    menu_strings[3] := 'Гра на двох';
-    menu_strings[4] := 'Вихід';
+    menu_strings[1] := 'Лёгкий уровень';
+    menu_strings[2] := 'Сложный уровень';
+    menu_strings[3] := 'Игра на двоих';
+    menu_strings[4] := 'Виход';
     
     ClearValues;
     
